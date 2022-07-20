@@ -20,6 +20,8 @@ if [ ! "$(echo $THR | jq '.totals|add')" = "0" ]; then
     FILES="$FILES thr.json"
 fi
 
+cat $FILES
+
 # Merge json
 if [ ! "$FILES" = "" ]; then
     OUTPUT=$(jq -s 'def f(x;y): reduce y[] as $item (x; reduce ($item | keys_unsorted[]) as $key (.; $item[$key] as $val | ($val | type) as $type | .[$key] = if ($type == "object") then f({};[if .[$key] == null then {} else .[$key] end, $val]) elif ($type == "array") then (.[$key] + $val | unique) else $val end)); f({};.)' $FILES)
@@ -31,6 +33,5 @@ OUTPUT="${OUTPUT//'%'/'%25'}"
 OUTPUT="${OUTPUT//$'\n'/'%0A'}"
 OUTPUT="${OUTPUT//$'\r'/'%0D'}"
 
-cat $FILES
 rm $FILES
 echo "::set-output name=ecs_output::$OUTPUT"
