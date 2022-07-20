@@ -2,21 +2,21 @@
 set -e
 
 # Run three times to make sure we get everything
-ecs check $1 --fix --clear-cache --output-format=json > one.json
-ecs check $1 --fix --clear-cache --output-format=json > two.json
-ecs check $1 --fix --clear-cache --output-format=json > thr.json
+/composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > one.json
+/composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > two.json
+/composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > thr.json
 
 FILES=""
 
-if [ ! "$(echo $ONE | jq '.totals|add')" = "0" ]; then
+if [ ! "$(cat one.json | jq '.totals|add')" = "0" ]; then
     FILES="one.json"
 fi
 
-if [ ! "$(echo $TWO | jq '.totals|add')" = "0" ]; then
+if [ ! "$(cat two.json | jq '.totals|add')" = "0" ]; then
     FILES="$FILES two.json"
 fi
 
-if [ ! "$(echo $THR | jq '.totals|add')" = "0" ]; then
+if [ ! "$(cat thr.json | jq '.totals|add')" = "0" ]; then
     FILES="$FILES thr.json"
 fi
 
