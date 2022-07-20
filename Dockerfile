@@ -1,7 +1,7 @@
 # Container image that runs your code
 FROM php:8.0-alpine
 
-RUN apk add --no-cache tini git openssh-client
+RUN apk add --no-cache tini git openssh-client jq
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
