@@ -33,5 +33,5 @@ OUTPUT="${OUTPUT//'%'/'%25'}"
 OUTPUT="${OUTPUT//$'\n'/'%0A'}"
 OUTPUT="${OUTPUT//$'\r'/'%0D'}"
 
-rm $FILES
+rm one.json two.json thr.json
 echo "::set-output name=ecs_output::$OUTPUT"
