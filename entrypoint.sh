@@ -2,22 +2,35 @@
 set -e
 
 # Run three times to make sure we get everything
-/composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > json_one.json
-/composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > json_two.json
-/composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > json_thr.json
-OUTPUT=$(jq -s '.[0] * .[1] * .[2]' json_one.json json_two.json json_thr.json)
+ecs check $1 --fix --clear-cache --output-format=json > one.json
+ecs check $1 --fix --clear-cache --output-format=json > two.json
+ecs check $1 --fix --clear-cache --output-format=json > thr.json
+
+FILES=""
+
+if [ ! "$(echo $ONE | jq '.totals|add')" = "0" ]; then
+    FILES="one.json"
+fi
+
+if [ ! "$(echo $TWO | jq '.totals|add')" = "0" ]; then
+    FILES="$FILES two.json"
+fi
+
+if [ ! "$(echo $THR | jq '.totals|add')" = "0" ]; then
+    FILES="$FILES thr.json"
+fi
+
+# Merge json
+if [ ! "$FILES" = "" ]; then
+    OUTPUT=$(jq -s 'def f(x;y): reduce y[] as $item (x; reduce ($item | keys_unsorted[]) as $key (.; $item[$key] as $val | ($val | type) as $type | .[$key] = if ($type == "object") then f({};[if .[$key] == null then {} else .[$key] end, $val]) elif ($type == "array") then (.[$key] + $val | unique) else $val end)); f({};.)' $FILES)
+else
+    OUTPUT="$(cat one.json)"
+fi
 
 OUTPUT="${OUTPUT//'%'/'%25'}"
 OUTPUT="${OUTPUT//$'\n'/'%0A'}"
 OUTPUT="${OUTPUT//$'\r'/'%0D'}"
 
-echo "JSON FILES:"
-echo "ONE"
-cat json_one.json
-echo "TWO"
-cat json_two.json
-echo "THR"
-cat json_thr.json
-
-rm json_one.json json_two.json json_thr.json
+cat $FILES
+rm $FILES
 echo "::set-output name=ecs_output::$OUTPUT"
