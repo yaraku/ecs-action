@@ -1,18 +1,18 @@
 #!/bin/sh -l
 set -e
 
-echo "Running ECS"
+echo "Running ECS on $1"
 
 # Run three times to make sure we get everything
-/composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > one.json
+/composer/vendor/bin/ecs check "$1" --fix --clear-cache --output-format=json > one.json
 
 echo "First run finished"
 
-/composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > two.json
+/composer/vendor/bin/ecs check "$1" --fix --clear-cache --output-format=json > two.json
 
 echo "Second run finished"
 
-/composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > thr.json
+/composer/vendor/bin/ecs check "$1" --fix --clear-cache --output-format=json > thr.json
 
 echo "Third run finished"
 
