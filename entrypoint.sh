@@ -1,12 +1,24 @@
 #!/bin/sh -l
 set -e
 
+echo "Running ECS"
+
 # Run three times to make sure we get everything
 /composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > one.json
+
+echo "First run finished"
+
 /composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > two.json
+
+echo "Second run finished"
+
 /composer/vendor/bin/ecs check $1 --fix --clear-cache --output-format=json > thr.json
 
+echo "Third run finished"
+
 FILES=""
+
+echo "Checking that json files are populated"
 
 if [ ! "$(cat one.json | jq '.totals|add')" = "0" ]; then
     FILES="one.json"
