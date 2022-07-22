@@ -1,7 +1,7 @@
 # Container image that runs your code
 FROM php:8.0-alpine
 
-RUN apk add --no-cache tini git openssh-client jq php8.0-intl
+RUN apk add --no-cache tini git openssh-client jq
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -11,7 +11,7 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 \
 
 RUN COMPOSER_ALLOW_SUPERUSER=1 \
     COMPOSER_HOME="/composer" \
-    composer global require symplify/easy-coding-standard --prefer-dist --no-progress --dev
+    composer global require symplify/easy-coding-standard symfony/polyfill-intl-icu --prefer-dist --no-progress --dev
 
 ENV PATH /composer/vendor/bin:${PATH}
 
