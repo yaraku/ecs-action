@@ -2,10 +2,9 @@
 set -e
 
 # Run three times to make sure we get everything
-/composer/vendor/bin/ecs check "$1" --fix --clear-cache --output-format=json > one.json
-/composer/vendor/bin/ecs check "$1" --fix --clear-cache --output-format=json > two.json
-
-/composer/vendor/bin/ecs check "$1" --fix --clear-cache --output-format=json > thr.json
+echo $(/composer/vendor/bin/ecs check "$1" --fix --clear-cache --output-format=json > one.json)
+echo $(/composer/vendor/bin/ecs check "$1" --fix --clear-cache --output-format=json > two.json)
+echo $(/composer/vendor/bin/ecs check "$1" --fix --clear-cache --output-format=json > thr.json)
 
 FILES=""
 
