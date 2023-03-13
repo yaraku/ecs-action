@@ -11,7 +11,7 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 \
 
 RUN COMPOSER_ALLOW_SUPERUSER=1 \
     COMPOSER_HOME="/composer" \
-    composer global install --prefer-dist --no-progress --dev
+    composer global require laravel/pint --prefer-dist --no-progress --dev
 
 ENV PATH /composer/vendor/bin:${PATH}
 
