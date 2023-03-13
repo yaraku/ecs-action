@@ -1,15 +1,9 @@
 #!/bin/sh -l
 set -e
 
-# Run three times to make sure we get everything
-echo $(/composer/vendor/bin/ecs check $1 --clear-cache --output-format=json > output.json)
+OUTPUT=$(./vendor/bin/pint $1 --test --preset=psr12 -v --format=json)
 
-cat output.json
-OUTPUT="$(cat output.json)"
+echo "OUTPUT: $OUTPUT"
+echo "ecs_output=$OUTPUT" >> "$GITHUB_OUTPUT"
 
-OUTPUT="${OUTPUT//'%'/'%25'}"
-OUTPUT="${OUTPUT//$'\n'/'%0A'}"
-OUTPUT="${OUTPUT//$'\r'/'%0D'}"
-
-rm output.json
 echo "::set-output name=ecs_output::$OUTPUT"
